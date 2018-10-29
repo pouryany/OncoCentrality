@@ -366,7 +366,7 @@ gene.essential %<>% filter(., total.node >20, total.edge > 20) %>%
 
 
     # Plotting Correlations
-    # library(GGally)
+    library(GGally)
     gene.cor.data <- gene.essential %>% dplyr::select(., deg.quant,ssc.quant,
                                                       pgr.quant,pgr.dbl.quant,
                                                       pgr.und.quant)
@@ -380,7 +380,13 @@ gene.essential %<>% filter(., total.node >20, total.edge > 20) %>%
             lower = list(continuous = wrap("points", alpha = 0.3,    size=0.1))
             )  + theme_bw()
 
-
+    cor.mat <- cor(gene.cor.data)
+    cor.mat <- signif(cor.mat, digits = 2)
+    colnames(cor.mat) <- c("Degree", "SS-Katz","Pgr","SS-Pgr",
+                             "Und. Pgr")
+    rownames(cor.mat) <- colnames(cor.mat)
+    cor.mat[lower.tri(cor.mat,diag = F)] <- ""
+    xtable(cor.mat, digits = 2)
 #####
     #Ignore this block
     {
@@ -492,8 +498,8 @@ gene.essential2 <- gene.essential2 %>% gather(.,key = "Type", value = "ranks", p
 gene.essential2$Type <- as.factor(gene.essential2$Type)
 levels(gene.essential2$Type) <- c("Source-Sink PageRank", "Undirected PageRank", "Source-Sink Katz")
 
-ggplot(gene.essential2,aes(ranks,color = Description)) +
-    stat_ecdf(geom = "point") + facet_wrap(~Type ,ncol = 3)+theme_bw() + labs(x = "Quantile", y = "Cumulative Density")+
+ggplot(gene.essential2,aes(ranks,color = Description, shape =Description)) +
+    stat_ecdf(geom = "point") + facet_wrap(~Type ,ncol = 1)+theme_bw() + labs(x = "", y = "")+
     guides(colour = guide_legend(override.aes = list(size=10))) +
     theme(strip.text = element_text(face="bold", size=20),
           plot.title = element_text(size = 20),
@@ -504,9 +510,9 @@ ggplot(gene.essential2,aes(ranks,color = Description)) +
           axis.text.x=element_text(size = 20),
           axis.ticks.y=element_blank(),
           legend.position="bottom", legend.box = "horizontal") +
-    geom_text(data=data.frame(x=50, y=0, label=ks.pvals,
+    geom_text(data=data.frame(x=50, y=0.05, label=ks.pvals,
                 Type = c("Source-Sink PageRank", "Undirected PageRank", "Source-Sink Katz")),
-                aes(x,y,label=label),size = 7, inherit.aes=FALSE)
+                aes(x,y,label=label),size = 10, inherit.aes=FALSE)
 
 
 
@@ -601,7 +607,7 @@ overall.cors$label <- text.vals
 
 ggplot(total, aes(y = freq, x= quant)) + geom_point()+
      geom_smooth(method= "lm") + #geom_smooth(method= "loess", color="green" , fill = "red") +
-     facet_wrap(~Centrality ,ncol = 3) +theme_bw()+ labs(x = "Quantile Score", y = "Fraction of Cancer Genes")+
+     facet_wrap(~Centrality ,ncol = 2) +theme_bw()+ labs(x = "", y = "")+
      theme(strip.text = element_text(face="bold", size=20),
           plot.title = element_text(size = 20),
              axis.title = element_text(size = 30),
@@ -610,7 +616,7 @@ ggplot(total, aes(y = freq, x= quant)) + geom_point()+
              axis.text.y=element_text(size = 12),
              axis.text.x=element_text(size = 12),
              axis.ticks.y=element_blank()) +  geom_text(data=overall.cors, x = 50, y =0.5,
-               aes(x,y,label=label),size = 6, inherit.aes=FALSE)
+               aes(x,y,label=label),size = 8, inherit.aes=FALSE)
 
 
 # Saving namespace
