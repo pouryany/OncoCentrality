@@ -1,4 +1,5 @@
 # OncoCentrality
-## Related to a submitted article to IEEE BIBM.
+## This is the accompanying code to the following publication: 
+Pourya Naderi Yeganeh, Erik Saule, and M. Taghi Mostafavi., "Centrality of Cancer-related Genes in Human Biological Pathways", To appear in the proceedings of IEEE BIBM 2019
 ## Contact pnaderiy@uncc.edu for more info.
-## Use of code needs proper permissions and citations.
+## Feel free to use this code with proper permissions and citations.
